@@ -5,7 +5,7 @@ import pyqtgraph as pg
 class PostswingGraphWidget(QWidget):
     def __init__(self):
         super().__init__()
-        self.pw = pg.PlotWidget(title="ポストスイング")
+        self.pw = pg.PlotWidget(title="Postswing [degree]")
 
         # Init laout
         layout = QVBoxLayout()
@@ -20,13 +20,12 @@ class PostswingGraphWidget(QWidget):
         self.pw.clear()
         self.pw.plot(plot_data, pen=(0,0,0))
         self.pw.plot([0, len(plot_data)], [60, 60], pen=(255, 0, 0))
-        self.pw.getAxis('left').setLabel('deg')
         self.pw.setYRange(0, 270)
 
 class PostswingScoreGraphWidget(QWidget):
     def __init__(self):
         super().__init__()
-        self.pw = pg.PlotWidget(title="ポストスイング")
+        self.pw = pg.PlotWidget(title="Postswing [score]")
 
         # Init laout
         layout = QVBoxLayout()
@@ -40,5 +39,4 @@ class PostswingScoreGraphWidget(QWidget):
 
         self.pw.clear()
         self.pw.plot(plot_data, pen=(0,0,0))
-        self.pw.getAxis('left').setLabel('point')
         self.pw.setYRange(0, 100)

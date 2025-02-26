@@ -5,6 +5,9 @@ import pyqtgraph as pg
 from datalist import *
 from preswing import *
 from postswing import *
+from accuracy import *
+from speed import *
+from gridscore import *
 
 pg.setConfigOption('background', 'w')
 pg.setConfigOption('foreground', 'k')
@@ -18,25 +21,37 @@ class MainWindow(QMainWindow):
 
         # Init Widgets
         self.dataList = DataListWidget(self)
-        self.preswingGraph = PreswingGraphWidget()
-        self.postswingGraph = PostswingGraphWidget()
-        self.postswingscoreGraph = PostswingScoreGraphWidget()
+        self.graphs = [
+            PreswingGraphWidget(),
+            PreswingScoreGraphWidget(),
+            PostswingGraphWidget(),
+            PostswingScoreGraphWidget(),
+            SpeedGraphWidget(),
+            AccuracyGraphWidget(),
+            GridScoreWidget(),
+        ]
         # Init connection
-        self.dataList.changed.connect(self.preswingGraph.update_graph)
-        self.dataList.changed.connect(self.postswingGraph.update_graph)
-        self.dataList.changed.connect(self.postswingscoreGraph.update_graph)
+        for graph in self.graphs:
+            self.dataList.changed.connect(graph.update_graph)
         # Init Docks
         self.dock_manager = QtAds.CDockManager(self)
-        labels = ["DataList", "PreswingGraph", "PostswingGraph", "PostswingScoreGraph"]
-        self.docks = [QtAds.CDockWidget(label) for label in labels]
-        self.docks[0].setWidget(self.dataList)
-        self.docks[1].setWidget(self.preswingGraph)
-        self.docks[2].setWidget(self.postswingGraph)
-        self.docks[3].setWidget(self.postswingscoreGraph)
-        h = self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, self.docks[0])
-        h = self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, self.docks[1])
-        h = self.dock_manager.addDockWidget(QtAds.BottomDockWidgetArea, self.docks[2], h)
-        h = self.dock_manager.addDockWidget(QtAds.BottomDockWidgetArea, self.docks[3], h)
+        dock = QtAds.CDockWidget("DataList")
+        dock.setWidget(self.dataList)
+        self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, dock)
+        for i, graph in enumerate(self.graphs):
+            print(type(graph))
+            dock = QtAds.CDockWidget(type(graph).__name__)
+            dock.setWidget(graph)
+            if i == 0:
+                h1 = self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, dock)
+            elif i == 1:
+                h2 = self.dock_manager.addDockWidget(QtAds.RightDockWidgetArea, dock)
+            else:
+                if i%2 == 0:
+                    self.dock_manager.addDockWidget(QtAds.BottomDockWidgetArea, dock, h1)
+                elif i%2 == 1:
+                    self.dock_manager.addDockWidget(QtAds.BottomDockWidgetArea, dock, h2)
+
 
     def init_menubar(self):
         menubar = self.menuBar()
@@ -45,6 +60,7 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    # app.setStyle("Fusion")
     window = MainWindow()
     window.show()
     sys.exit(app.exec())

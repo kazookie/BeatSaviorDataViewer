@@ -19,7 +19,7 @@ class DataLoadWorker(QThread):
             lines = fp.readlines()
             fp.close()
 
-            for line in lines[1:-1]:
+            for line in reversed(lines[1:-1]):
                 data = json.loads(line)
                 self.widget.play_datas.append(data)
                 item = QListWidgetItem()
