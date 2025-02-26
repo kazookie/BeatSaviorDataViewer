@@ -1,10 +1,10 @@
 import sys
-from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QMainWindow, QLabel
+from PySide6.QtWidgets import QApplication, QMainWindow
 import PySide6QtAds as QtAds
-import Widgets
 import pyqtgraph as pg
-from qt_material import apply_stylesheet
+from datalist import *
+from preswing import *
+from postswing import *
 
 pg.setConfigOption('background', 'w')
 pg.setConfigOption('foreground', 'k')
@@ -17,10 +17,10 @@ class MainWindow(QMainWindow):
         self.init_menubar()
 
         # Init Widgets
-        self.dataList = Widgets.DataListWidget(self)
-        self.preswingGraph = Widgets.PreswingGraphWidget()
-        self.postswingGraph = Widgets.PostswingGraphWidget()
-        self.postswingscoreGraph = Widgets.PostswingScoreGraphWidget()
+        self.dataList = DataListWidget(self)
+        self.preswingGraph = PreswingGraphWidget()
+        self.postswingGraph = PostswingGraphWidget()
+        self.postswingscoreGraph = PostswingScoreGraphWidget()
         # Init connection
         self.dataList.changed.connect(self.preswingGraph.update_graph)
         self.dataList.changed.connect(self.postswingGraph.update_graph)
@@ -47,5 +47,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
-    # apply_stylesheet(app, theme='dark_teal.xml')
     sys.exit(app.exec())
